@@ -1,0 +1,186 @@
+import 'cypress-file-upload'
+import '@4tw/cypress-drag-drop'
+import 'cypress-iframe'
+import 'cypress-xpath'
+
+describe('Damjan - Learning - way2automation', function () {
+     beforeEach(() => {
+        
+      }) 
+
+      const p = "dog.jpg";
+      const password = Cypress.env('password')
+
+    const getIframeDocument = () => {
+        return cy.get('iframe[src="draggable/default.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody = () => {
+        
+        return getIframeDocument().its('body').should('not.be.undefined').then(cy.wrap)
+      }     
+      const getIframeDocument2 = () => {
+        return cy.get('iframe[src="draggable/default2.html"]').its('0.contentDocument').should('exist')
+      } 
+      const getIframeBody2 = () => {
+        
+        return getIframeDocument2().its('body').should('not.be.undefined').then(cy.wrap)
+      }   
+      const getIframeDocument3 = () => {
+        return cy.get('iframe[src="draggable/default3.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody3 = () => {
+        
+        return getIframeDocument3().its('body').should('not.be.undefined').then(cy.wrap)
+      }   
+      const getIframeDocument4 = () => {
+        return cy.get('iframe[src="draggable/default4.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody4 = () => {
+        
+        return getIframeDocument4().its('body').should('not.be.undefined').then(cy.wrap)
+      }   
+
+      const getIframeDocument5 = () => {
+        return cy.get('iframe[src="draggable/default5.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody5 = () => {
+        
+        return getIframeDocument5().its('body').should('not.be.undefined').then(cy.wrap)
+      }   
+      const getIframeDocument6 = () => {
+        return cy.get('iframe[src="droppable/default.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody6 = () => {
+        
+        return getIframeDocument6().its('body').should('not.be.undefined').then(cy.wrap)
+       
+      }  
+      const getIframeDocument7 = () => {
+        return cy.get('iframe[src="droppable/default2.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody7 = () => {
+        
+        return getIframeDocument7().its('body').should('not.be.undefined').then(cy.wrap)
+       
+      }  
+      const getIframeDocument8 = () => {
+        return cy.get('iframe[src="droppable/default2.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody8 = () => {
+        
+        return getIframeDocument8().its('body').should('not.be.undefined').then(cy.wrap)
+       
+      } 
+  it('DEFAULT FUNCTIONALITY', function (){
+     cy.visit('https://www.way2automation.com/way2auto_jquery/draggable.php#load_box')
+     getIframeBody().find('#draggable').move({ deltaX: 200, deltaY: 200 }).invoke('css', 'inset').should('equal', '200px -200px -200px 200px')
+  
+      //.expect("#draggable").to.have.css('style', 'position: relative; width: 150px; inset: 150px auto auto 0px; height: 150px;') *Reminder treba dodati*
+      //update bolji assert
+  });
+
+
+  it('CONSTRAINT MOVEMENT', function (){
+    cy.visit('https://www.way2automation.com/way2auto_jquery/draggable.php#load_box')
+    cy.get('a[href*="#example-1-tab-2"]').click({force:true})
+    getIframeBody2().find('#draggable').move({ deltaX: 0, deltaY: 50 }).invoke('css', 'top').should('equal', '50px')
+    getIframeBody2().find('#draggable2').move({ deltaX: 50, deltaY: 0 }).invoke('css', 'top').should('equal', '0px')
+    getIframeBody2().find('#draggable5').move({ deltaX: 0, deltaY: 5 }).invoke('css', 'top').should('equal', '-16px')
+    getIframeBody2().find('#draggable3').trigger('mousemove', { clientX: 200, clientY: 300 }).invoke('css', 'position').should('equal', 'relative')
+ });
+
+ it('CURSOR STYLE', function (){
+  cy.visit('https://www.way2automation.com/way2auto_jquery/draggable.php#load_box')
+  cy.get('a[href="#example-1-tab-3"]').click({force:true})
+  getIframeBody3().find('#draggable').move({ deltaX: 30, deltaY: 30 }).invoke('css', 'cursor').should('equal', 'auto')
+  getIframeBody3().find('#draggable2').move({ deltaX: 80, deltaY: 80 }).invoke('css', 'cursor').should('equal', 'auto')
+  getIframeBody3().find('#draggable3').trigger('mousemove', { clientX: 100, clientY: 100 }).invoke('css', 'position').should('equal', 'relative')
+});
+
+it('EVENTS', function (){
+  cy.visit('https://www.way2automation.com/way2auto_jquery/draggable.php#load_box')
+  cy.get('a[href="#example-1-tab-4"]').click({force:true})
+  getIframeBody4().find('#draggable').move({ deltaX: 30, deltaY: 50 })
+  getIframeBody4().find('#draggable').move({ deltaX: 50, deltaY: 80 })
+  getIframeBody4().find('#draggable').move({ deltaX: 80, deltaY: 100 }).invoke('css', 'inset').should('equal', '230px -160px -230px 160px')
+});
+
+it('DRAGGABLE+SORTABLE', function (){
+  cy.visit('https://www.way2automation.com/way2auto_jquery/draggable.php#load_box')
+  cy.get('a[href="#example-1-tab-5"]').click({force:true})
+  getIframeBody5().xpath('//li[normalize-space(.)="Drag me down"]').move({ deltaX: 0, deltaY: 150 })
+  getIframeBody5().find('ul').should('have.length', 2).and('contain', 'Drag me down')
+});
+
+it('Droppable --> DEFAULT FUNCTIONALITY', function (){
+  cy.visit('https://www.way2automation.com/way2auto_jquery/droppable.php#load_box')
+  const drag_element = getIframeBody6().find('#draggable');
+  const drop_element = getIframeBody6().find('#droppable');
+
+  cy.get('a[href="#example-1-tab-1"]').click({force:true})
+  // getIframeBody6().find(drag_element).drag(drop_element, { force: true })
+  // getIframeBody6().find('#draggable').drag(drop_element, { force: true })
+
+  getIframeBody6().find('#draggable').move({ deltaX: 150, deltaY: 0 })
+  getIframeBody6().find('#droppable').should('contain','Dropped!')
+ 
+
+});
+
+it('Droppable --> ACCEPT', function (){
+  cy.visit('https://www.way2automation.com/way2auto_jquery/droppable.php#load_box')
+  const drag_element = getIframeBody7().find('#draggable');
+  const drop_element = getIframeBody7().find('#droppable');
+
+  cy.get('a[href="#example-1-tab-2"]').click({force:true})
+  // getIframeBody6().find(drag_element).drag(drop_element, { force: true })
+  // getIframeBody6().find('#draggable').drag(drop_element, { force: true })
+
+  getIframeBody7().find('#draggable-nonvalid').move({ deltaX: 300, deltaY: 0 })
+  getIframeBody7().find('#droppable').should('contain',"accept: '#draggable'")
+  getIframeBody7().find('#draggable').move({ deltaX: 150, deltaY: 0 })
+  getIframeBody7().find('#droppable').should('contain','Dropped!')
+
+});
+
+it('should return a list with all products', () => {
+  cy.request({
+      method: 'GET',
+      url: 'https://serverest.dev/produtos'
+  })
+      .should((response) => {
+          cy.log(JSON.stringify(response.body))
+          expect(response.status).to.eq(200)
+      });
+}); 
+
+ it.only('Registration', function (){
+
+  const username = Cypress.env('username')
+  const password = ('password')
+
+  cy.visit('https://www.way2automation.com/way2auto_jquery/registration.php#load_box')
+
+  // getIframeBody8().find('form[id="register_form"] input[name="name"]').type("test123");
+  cy.get('form[id="register_form"] input[name="name"]').type("test123")
+  cy.get('body > section:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > form:nth-child(2) > fieldset:nth-child(1) > p:nth-child(2) > input:nth-child(2)').type("test123")
+  cy.get(':nth-child(2) > .radio_wrap > :nth-child(1) > input').check().should('be.checked')
+  cy.get('.padding-bottom > .radio_wrap > :nth-child(2) > input').check().should('be.checked') 
+  cy.get('#register_form > :nth-child(4) > select').select(1).invoke("val").should("eq", "India") 
+  cy.get(':nth-child(2) > select').select(1).invoke("val").should("eq","1")  
+  cy.get(':nth-child(3) > select').select(1).invoke("val").should("eq","1") 
+  cy.get(':nth-child(5) > :nth-child(4) > select').select(1).invoke("val").should("eq","2014") 
+  cy.get('#register_form > :nth-child(6) > input').type("999-99999999") //write assertions for  
+  cy.get('#register_form > :nth-child(7) > input').type("999-99999999") //write assertions for 
+  cy.get(':nth-child(8) > input').type("test@gmail.com") //write assertions for  
+  cy.get('input[type="file"]').attachFile(p) //write assertions for 
+  cy.get('textarea').type('Test TextArea text') //write assertions for 
+  cy.get('#register_form > :nth-child(11) > input').type(password) //write assertions for 
+  cy.get(':nth-child(12) > input').type(password)
+  cy.get('input[value="submit"]').click({force:true})
+  
+
+});
+
+}); 
+
