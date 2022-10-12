@@ -170,11 +170,11 @@ it('should return a list with all products', () => {
   cy.get(':nth-child(2) > select').select(1).invoke("val").should("eq","1")  
   cy.get(':nth-child(3) > select').select(1).invoke("val").should("eq","1") 
   cy.get(':nth-child(5) > :nth-child(4) > select').select(1).invoke("val").should("eq","2014") 
-  cy.get('#register_form > :nth-child(6) > input').type("999-99999999") //write assertions for  
-  cy.get('#register_form > :nth-child(7) > input').type("999-99999999") //write assertions for 
-  cy.get(':nth-child(8) > input').type("test@gmail.com") //write assertions for  
+  cy.get('#register_form > :nth-child(6) > input').type("999-99999999").should("eq","999-99999999") //write assertions for  
+  cy.get('#register_form > :nth-child(7) > input').type("username").should("eq","username") //write assertions for 
+  cy.get(':nth-child(8) > input').type("test@gmail.com").should("eq","test@gmail.com") //write assertions for  
   cy.get('input[type="file"]').attachFile(p) //write assertions for 
-  cy.get('textarea').type('Test TextArea text') //write assertions for 
+  cy.get('textarea').type('Test TextArea text').should("eq","Test TextArea text") //write assertions for 
   cy.get('#register_form > :nth-child(11) > input').type(password) //write assertions for 
   cy.get(':nth-child(12) > input').type(password)
   cy.get('input[value="submit"]').click({force:true})
