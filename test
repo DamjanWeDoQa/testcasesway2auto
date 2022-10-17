@@ -8,9 +8,22 @@ describe('Damjan - Learning - way2automation', function () {
         
       }) 
 
-      const p = "dog.jpg";
-      const password = Cypress.env('password')
+      function userID_Alpha_Numeric() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    
+        for (var i = 0; i < 10; i++)
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+    
+        return text;
+      }
 
+      const accessToken = 'e70d7ffdfaef2e147278ac4b83f81ebd8be801996e148f39909f3a2f8366a456'
+      const p = "dog.jpg";
+      const password = Cypress.env('password');
+      const uniqueSeed = Date.now().toString();
+  
+      
     const getIframeDocument = () => {
         return cy.get('iframe[src="draggable/default.html"]').its('0.contentDocument').should('exist')
       }
@@ -64,11 +77,19 @@ describe('Damjan - Learning - way2automation', function () {
        
       }  
       const getIframeDocument8 = () => {
-        return cy.get('iframe[src="droppable/default2.html"]').its('0.contentDocument').should('exist')
+        return cy.get('iframe[src="autocomplete/defult1.html"]').its('0.contentDocument').should('exist')
       }
       const getIframeBody8 = () => {
         
         return getIframeDocument8().its('body').should('not.be.undefined').then(cy.wrap)
+       
+      } 
+      const getIframeDocument9= () => {
+        return cy.get('iframe[src="autocomplete/defult2.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody9 = () => {
+        
+        return getIframeDocument9().its('body').should('not.be.undefined').then(cy.wrap)
        
       } 
   it('DEFAULT FUNCTIONALITY', function (){
@@ -154,7 +175,7 @@ it('should return a list with all products', () => {
       });
 }); 
 
- it.only('Registration', function (){
+ it('Registration', function (){
 
   const username = Cypress.env('username')
   const password = ('password')
@@ -170,17 +191,98 @@ it('should return a list with all products', () => {
   cy.get(':nth-child(2) > select').select(1).invoke("val").should("eq","1")  
   cy.get(':nth-child(3) > select').select(1).invoke("val").should("eq","1") 
   cy.get(':nth-child(5) > :nth-child(4) > select').select(1).invoke("val").should("eq","2014") 
-  cy.get('#register_form > :nth-child(6) > input').type("999-99999999").should("eq","999-99999999") //write assertions for  
-  cy.get('#register_form > :nth-child(7) > input').type("username").should("eq","username") //write assertions for 
-  cy.get(':nth-child(8) > input').type("test@gmail.com").should("eq","test@gmail.com") //write assertions for  
+  cy.get('#register_form > :nth-child(6) > input').type("999-99999999").invoke("val").should("eq","999-99999999") //write assertions for  
+  cy.get('#register_form > :nth-child(7) > input').type("username").invoke("val").should("eq","username") //write assertions for 
+  cy.get(':nth-child(8) > input').type("test@gmail.com").invoke("val").should("eq","test@gmail.com") //write assertions for  
   cy.get('input[type="file"]').attachFile(p) //write assertions for 
-  cy.get('textarea').type('Test TextArea text').should("eq","Test TextArea text") //write assertions for 
+  cy.get('textarea').type('Test TextArea text').invoke("val").should("eq","Test TextArea text") //write assertions for 
   cy.get('#register_form > :nth-child(11) > input').type(password) //write assertions for 
   cy.get(':nth-child(12) > input').type(password)
   cy.get('input[value="submit"]').click({force:true})
   
+});
+
+it('Autocomplete DF', function (){
+
+  cy.visit('https://www.way2automation.com/way2auto_jquery/autocomplete.php#load_box')
+  getIframeBody8().find('input[autocomplete="off"]').type('JavaS').type('{downarrow}',{force:true}).type('{downarrow}',{force:true}).type('{enter}',{force:true})
 
 });
+
+it('Autocomplete > Multiple Values', function (){
+
+  cy.visit('https://www.way2automation.com/way2auto_jquery/autocomplete.php#load_box')
+  cy.get('a[href="#example-1-tab-2"]').click({force:true})
+  getIframeBody9().find('input[id="tags"]').type('JavaS').type('{downarrow}',{force:true}).type('{downarrow}',{force:true}).type('{enter}',{force:true}).invoke("val").should("contains","JavaScript")
+  getIframeBody9().find('input[id="tags"]').type('C').type('{downarrow}',{force:true}).type('{downarrow}',{force:true}).type('{enter}',{force:true})
+
+});
+
+it('Rest Api', () => {
+  cy.request({
+      method: 'GET',
+      url: 'https://gorest.co.in/',
+      headers : {
+         'authorization' : "Bearer e70d7ffdfaef2e147278ac4b83f81ebd8be801996e148f39909f3a2f8366a456"
+      }
+  })
+        .should((response) => {
+          cy.log(JSON.stringify(response.body))
+          expect(response.status).to.eq(200)
+      });
+}); 
+
+it('Rest Api - get users', () => {
+  cy.request({
+      method: 'GET',
+      url: 'https://gorest.co.in/public/v2/users',
+      headers : {
+         'authorization' : "Bearer e70d7ffdfaef2e147278ac4b83f81ebd8be801996e148f39909f3a2f8366a456"
+      }
+  })
+        .should((response) => {
+          cy.log(JSON.stringify(response.body))
+          expect(response.status).to.eq(200)
+      });
+}); 
+it('Rest Api - get comments', () => {
+  cy.request({
+      method: 'GET',
+      url: 'https://gorest.co.in/public/v2/posts/7/comments',
+      headers : {
+        'authorization' : "Bearer e70d7ffdfaef2e147278ac4b83f81ebd8be801996e148f39909f3a2f8366a456"
+      }
+  })
+        .should((response) => {
+          cy.log(JSON.stringify(response.body))
+          expect(response.status).to.eq(200)
+      });
+}); 
+
+it('Rest Api - Post methods', () => {
+  
+
+  cy.request({
+      method: 'POST',
+      url: 'https://gorest.co.in/public/v2/users',
+      headers : {
+        'authorization' : "Bearer e70d7ffdfaef2e147278ac4b83f81ebd8be801996e148f39909f3a2f8366a456"
+      },
+      body: { 
+        "name":"Test Automation 1",
+        "gender":"male",
+        "email": userID_Alpha_Numeric() + "@gmail.com",
+        "status":"active"         
+      }
+  })
+        .should((response) => {
+          cy.log(JSON.stringify(response.body))
+          expect(response.status).to.eq(201)
+      });
+}); 
+
+
+
 
 }); 
 
