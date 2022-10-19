@@ -4,9 +4,16 @@ import 'cypress-iframe'
 import 'cypress-xpath'
 
 describe('Damjan - Learning - way2automation', function () {
-     beforeEach(() => {
-        
-      }) 
+  beforeEach(() => {
+    if (window.navigator && navigator.serviceWorker) {
+      navigator.serviceWorker.getRegistrations()
+      .then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister()
+        })
+      })
+    }
+  })
 
       function userID_Alpha_Numeric() {
         var text = "";
@@ -90,6 +97,14 @@ describe('Damjan - Learning - way2automation', function () {
       const getIframeBody9 = () => {
         
         return getIframeDocument9().its('body').should('not.be.undefined').then(cy.wrap)
+       
+      } 
+      const getIframeDocument10= () => {
+        return cy.get('iframe[src="alert/simple-alert.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody10 = () => {
+        
+        return getIframeDocument10().its('body').should('not.be.undefined').then(cy.wrap)
        
       } 
   it('DEFAULT FUNCTIONALITY', function (){
@@ -260,8 +275,6 @@ it('Rest Api - get comments', () => {
 }); 
 
 it('Rest Api - Post methods', () => {
-  
-
   cy.request({
       method: 'POST',
       url: 'https://gorest.co.in/public/v2/users',
@@ -281,7 +294,27 @@ it('Rest Api - Post methods', () => {
       });
 }); 
 
+it('disables services', function () {
+  cy.visit('https://www.way2automation.com/way2auto_jquery/alert.php#load_box', {
+    onBeforeLoad (win) {
+      delete win.navigator.ServiceWorker
+      
+      // nope this should work by all logic but the, win.navigator.ServiceWorker is still there
+    }
+  })
+})
 
+it('Simple Alert', function (){
+
+  cy.visit('https://www.way2automation.com/way2auto_jquery/alert.php#load_box')
+  //cy.get('a[href="#example-1-tab-1"]').click({force:true})
+  getIframeBody10().find('button[onclick="myFunction()"]').click({force:true})
+  cy.on('window:alert',(t)=>{
+    //assertions
+    expect(t).to.contains('I am an alert box!');
+ })
+
+});
 
 
 }); 
