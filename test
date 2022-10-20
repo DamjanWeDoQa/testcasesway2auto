@@ -3,6 +3,14 @@ import '@4tw/cypress-drag-drop'
 import 'cypress-iframe'
 import 'cypress-xpath'
 
+
+/*Cypress.Commands.add('login', (email, pw) => {})
+Cypress.Commands.addAll({
+  login(email, pw) {},
+  visit(orig, url, options) {},
+})
+Cypress.Commands.overwrite('visit', (orig, url, options) => {})  this is an example on how to implement Custom Commands*/ 
+
 describe('Damjan - Learning - way2automation', function () {
   beforeEach(() => {
     if (window.navigator && navigator.serviceWorker) {
@@ -14,7 +22,7 @@ describe('Damjan - Learning - way2automation', function () {
       })
     }
   })
-
+ 
       function userID_Alpha_Numeric() {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -107,6 +115,28 @@ describe('Damjan - Learning - way2automation', function () {
         return getIframeDocument10().its('body').should('not.be.undefined').then(cy.wrap)
        
       } 
+      const getIframeBody11 = () => {
+        
+        return getIframeDocument11().its('body').should('not.be.undefined').then(cy.wrap)
+      }
+      const getIframeDocument11= () => {
+        return cy.get('iframe[src="datepicker/defult1.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody12 = () => {
+        
+        return getIframeDocument12().its('body').should('not.be.undefined').then(cy.wrap)
+      }
+      const getIframeDocument12= () => {
+        return cy.get('iframe[src="datepicker/defult2.html"]').its('0.contentDocument').should('exist')
+      }
+      const getIframeBody13 = () => {
+        
+        return getIframeDocument13().its('body').should('not.be.undefined').then(cy.wrap)
+      }
+      const getIframeDocument13= () => {
+        return cy.get('iframe[src="datepicker/defult3.html"]').its('0.contentDocument').should('exist')
+      }
+
   it('DEFAULT FUNCTIONALITY', function (){
      cy.visit('https://www.way2automation.com/way2auto_jquery/draggable.php#load_box')
      getIframeBody().find('#draggable').move({ deltaX: 200, deltaY: 200 }).invoke('css', 'inset').should('equal', '200px -200px -200px 200px')
@@ -316,6 +346,56 @@ it('Simple Alert', function (){
 
 });
 
+it('Date Picker', function (){
+
+  cy.visit('https://www.way2automation.com/way2auto_jquery/datepicker.php#load_box')
+  cy.get('a[href="#example-1-tab-1"]').click({force:true})
+  getIframeBody11().find('input[id="datepicker"]').click({force:true})
+  getIframeBody11().xpath("/html/body/div/table/tbody/tr[4]/td[5]/a")
+     .each(($el,index,$list)=> {
+      var dateName = $el.text()
+      if(dateName == '20')
+      {
+        cy.wrap($el).click({force:true})
+      }
+     })
+
+});
+
+it('Date Picker - Animations', function (){
+
+  cy.visit('https://www.way2automation.com/way2auto_jquery/datepicker.php#load_box')
+  cy.get('a[href="#example-1-tab-2"]').click({force:true})
+  getIframeBody12().find('select[id="anim"]').select(1).invoke("val").should("eq","slideDown")
+  getIframeBody12().find('input[id="datepicker"]').click({force:true})
+  getIframeBody12().xpath("/html/body/div/table/tbody/tr[4]/td[5]/a")
+     .each(($el,index,$list)=> {
+      var dateName = $el.text()
+      if(dateName == '20')
+      {
+        cy.wrap($el).click({force:true})
+      }
+     })
+
+});
+
+it('Date Picker - Month & Years', function (){
+
+  cy.visit('https://www.way2automation.com/way2auto_jquery/datepicker.php#load_box')
+  cy.get('a[href="#example-1-tab-3"]').click({force:true})
+  getIframeBody13().find('input[id="datepicker"]').click({force:true})
+  getIframeBody13().xpath("/html/body/div/table/tbody/tr[2]/td[5]/a")
+     .each(($el,index,$list)=> {
+      var dateName = $el.text()
+      if(dateName == '10')
+      {
+        cy.wrap($el).click({force:true})
+      }
+     })
+  getIframeBody13().find('input[id="datepicker"]').click({force:true})
+  getIframeBody13().find('select[data-handler="selectYear"]').select(1).invoke("val").should("eq","2013")  
+
+});
 
 }); 
 
